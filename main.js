@@ -32,10 +32,10 @@ window.addEventListener("load", () => {
 });
 
 function DisplayTodos() {
-	const todoList = document.querySelector("$todo-list");
+	const todoList = document.querySelector("#todo-list");
 
 	todoList.innerHTML = "";
-	todos.forEach((todo) => {
+	todos.sort().forEach((todo) => {
 		const todoItem = document.createElement("div");
 		todoItem.classList.add("todo-item");
 
@@ -62,7 +62,7 @@ function DisplayTodos() {
 		edit.classList.add("edit");
 		deleteButton.classList.add("delete");
 
-		content.innerHTML = '<inpute type="text" value="${todo.content}" readonly>';
+		content.innerHTML = `<input type="text" value="${todo.content}" readonly>`;
 		edit.innerHTML = "Edit";
 		deleteButton.innerHTML = "Delete";
 
@@ -80,7 +80,7 @@ function DisplayTodos() {
 			todoItem.classList.add("done");
 		}
 
-		input.addEventListener("click", (e) => {
+		input.addEventListener("change", (e) => {
 			todo.done = e.target.checked;
 			localStorage.setItem("todos", JSON.stringify(todos));
 
@@ -98,9 +98,17 @@ function DisplayTodos() {
 			input.removeAttribute("readonly");
 			input.focus();
 			input.addEventListener("blur", (e) => {
-				input.setAttribute("readonly", ture);
+				input.setAttribute("readonly", true);
 				todo.content = e.target.value;
+				localStorage.setItem("todos", JSON.stringify(todos));
+				DisplayTodos();
 			});
+		});
+
+		deleteButton.addEventListener("click", (e) => {
+			todos = todos.filter((t) => t != todo);
+			localStorage.setItem("todos", JSON.stringify(todos));
+			DisplayTodos();
 		});
 	});
 }
